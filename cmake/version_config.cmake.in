@@ -1,0 +1,39 @@
+set(ARG_SRC_DIR ${CMAKE_ARGV3})
+set(ARG_BIN_DIR ${CMAKE_ARGV4})
+
+
+IF(EXISTS ${ARG_SRC_DIR}/.git)
+  FIND_PACKAGE(Git)
+  IF(GIT_FOUND)
+      EXECUTE_PROCESS(
+      COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+      WORKING_DIRECTORY "${ARG_SRC_DIR}"
+      OUTPUT_VARIABLE "BRANCH"
+      ERROR_QUIET
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    EXECUTE_PROCESS(
+      COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+      WORKING_DIRECTORY "${ARG_SRC_DIR}"
+      OUTPUT_VARIABLE "COMMIT_ID"
+      ERROR_QUIET
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+  ELSE()
+    SET(BRANCH "")
+    SET(COMMIT_ID "")
+  ENDIF()
+ENDIF()
+
+
+
+string(TIMESTAMP BUILD_TIME "Time: %Y-%m-%d %H:%M:%S")
+set(GIT_BRANCH "Branch: ${BRANCH}")
+set(GIT_COMMIT_ID "Commit: ${COMMIT_ID}")
+
+set(BUILD_INFO "${BUILD_TIME}\\r\\n${GIT_BRANCH}\\r\\n${GIT_COMMIT_ID}")
+
+
+configure_file(
+        "${ARG_SRC_DIR}/build_info.h.in"
+        "${ARG_BIN_DIR}/build_info.h"
+        @ONLY)

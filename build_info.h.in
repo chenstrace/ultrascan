@@ -1,0 +1,6 @@
+#ifndef USCAN_BUILD_INFO_H_H_
+#define USCAN_BUILD_INFO_H_H_
+
+#define BUILD_INFO "@BUILD_INFO@"
+
+#endif /* USCAN_BUILD_INFO_H_H_ */
